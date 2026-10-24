@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" role="img" aria-label="xBay"><title>xBay</title><defs>
+  <linearGradient id="lgfill" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#3189EA"/><stop offset="1" stop-color="#0F5FB8"/>
+  </linearGradient>
+  <pattern id="mesh" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+    <path d="M0 0H8M0 0V8" fill="none" stroke="#D5DCE6" stroke-width="1.2" opacity=".6"/>
+  </pattern>
+</defs><rect width="512" height="512" rx="96" fill="#0A111D"/><g transform="translate(56 78) scale(2.857142857142857)"><g fill="#D5DCE6" stroke="#D5DCE6" stroke-width="9" stroke-linejoin="miter"><polygon points="8,6 46,6 132,114 94,114"/><polygon points="94,6 132,6 46,114 8,114"/></g><g fill="url(#lgfill)"><polygon points="8,6 46,6 132,114 94,114"/><polygon points="94,6 132,6 46,114 8,114"/></g><polyline points="14,108 56,56 78,78 122,26" fill="none" stroke="#0A111D" stroke-width="15" stroke-linejoin="miter" stroke-miterlimit="5"/><polyline points="14,108 56,56 78,78 122,26" fill="none" stroke="#F47B2A" stroke-width="9" stroke-linejoin="miter" stroke-miterlimit="5"/></g></svg>

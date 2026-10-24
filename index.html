@@ -1,0 +1,352 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="icon" href="/assets/brand/xbay-icon.svg" type="image/svg+xml">
+<link rel="icon" href="/assets/brand/icon-32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="/assets/brand/icon-180.png">
+<meta property="og:title" content="xBay">
+<meta property="og:description" content="Advanced analytics for PWHL San Jose. Launching before the Dec 5 home opener.">
+<title>xBay</title>
+<meta name="description" content="Advanced analytics for PWHL San Jose. Expected goals, goaltending, previews, and recaps. Launching before the Dec 5 home opener.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800;900&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one long night-rink scroll. Hero on the center line, then coverage, crew, data, lineup; one column of reading width with wide grids for cards. */
+:root {
+  color-scheme: dark;
+  --ice-night: #0A111D;
+  --boards: #111B2B;
+  --rule: #24344F;
+  --frost: #E8EEF6;
+  --frost-dim: #93A2B8;
+  --sj-orange: #F47B2A;
+  --sj-blue: #1F73D1;
+  --sj-blue-soft: #6FA6EA;
+  --goal-red: #7a3a3a;
+
+  --display: "Big Shoulders Display", "Arial Narrow", "Roboto Condensed", sans-serif;
+  --body: "IBM Plex Sans", "Helvetica Neue", Arial, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+
+  --s2: 8px; --s3: 12px; --s4: 16px; --s5: 24px; --s6: 32px; --s7: 48px; --s8: 80px;
+}
+* { box-sizing: border-box; }
+html { background: var(--ice-night); }
+body {
+  margin: 0; background: var(--ice-night); color: var(--frost);
+  font: 400 1rem/1.6 var(--body);
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.page { max-width: 1120px; margin: 0 auto; }
+h1, h2, h3 { font-family: var(--display); text-wrap: balance; margin: 0; line-height: 1; text-transform: uppercase; }
+p { margin: 0; }
+a { color: var(--sj-blue-soft); }
+a:focus-visible { outline: 2px solid var(--sj-orange); outline-offset: 3px; }
+.eyebrow { font: 500 .75rem/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--sj-orange); }
+.num { font-variant-numeric: tabular-nums; }
+
+/* ---------- top bar ---------- */
+.top { display: flex; align-items: center; justify-content: space-between; gap: var(--s4); padding-block: var(--s4); border-bottom: 1px solid var(--rule); flex-wrap: wrap; }
+.top .icon svg { height: 34px; width: auto; display: block; }
+.top .status { font: .75rem var(--mono); color: var(--frost-dim); display: flex; align-items: center; gap: var(--s2); }
+.top .status i { width: 8px; height: 8px; border-radius: 50%; background: var(--sj-orange); box-shadow: 0 0 0 4px rgba(244,123,42,.18); }
+
+/* ---------- hero: on the center line ---------- */
+.hero { position: relative; display: grid; justify-items: center; text-align: center; gap: var(--s5); padding-block: var(--s8) var(--s7); overflow: hidden; }
+.hero::before { content: ""; position: absolute; inset: 0 auto 0 50%; width: 3px; transform: translateX(-50%); background: linear-gradient(transparent, rgba(229,98,90,.22) 25%, rgba(229,98,90,.22) 75%, transparent); z-index: -1; }
+.hero::after { content: ""; position: absolute; left: 50%; top: 50%; width: min(560px, 92vw); aspect-ratio: 1; transform: translate(-50%, -50%); border: 2px solid rgba(31,115,209,.18); border-radius: 50%; z-index: -1; }
+.hero .mark svg { width: min(560px, 100%); height: auto; display: block; }
+.hero h1 { font-size: clamp(2.2rem, 5.6vw, 4rem); font-weight: 900; letter-spacing: .01em; max-width: 18ch; }
+.hero h1 em { font-style: normal; color: var(--sj-orange); }
+.hero .lede { max-width: 56ch; color: var(--frost-dim); font-size: 1.1rem; }
+.clock { display: flex; gap: var(--s5); align-items: stretch; border: 1px solid var(--rule); background: rgba(17,27,43,.85); border-radius: 6px; padding: var(--s3) var(--s5); flex-wrap: wrap; justify-content: center; }
+.clock .cd { display: grid; justify-items: center; }
+.clock b { font: 900 2.6rem/1 var(--display); color: var(--sj-orange); }
+.clock small { font: .7rem var(--mono); text-transform: uppercase; letter-spacing: .12em; color: var(--frost-dim); }
+.clock .vs { display: grid; align-content: center; text-align: left; border-left: 1px solid var(--rule); padding-left: var(--s5); }
+.clock .vs strong { font: 800 1.35rem/1.1 var(--display); text-transform: uppercase; }
+.clock .vs span { font: .75rem var(--mono); color: var(--frost-dim); }
+
+/* ---------- section scaffolding ---------- */
+section { padding-block: var(--s8) 0; display: grid; gap: var(--s6); }
+.sec-head { display: grid; gap: var(--s3); max-width: 64ch; }
+.sec-head h2 { font-size: clamp(2rem, 4.5vw, 3rem); font-weight: 900; }
+.sec-head p { color: var(--frost-dim); }
+
+/* ---------- coverage ---------- */
+.cover { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1px; background: var(--rule); border: 1px solid var(--rule); border-radius: 8px; overflow: hidden; }
+.cover article { background: var(--boards); padding: var(--s5); display: grid; gap: var(--s3); align-content: start; }
+.cover h3 { font-size: 1.55rem; font-weight: 800; letter-spacing: .02em; }
+.cover p { color: var(--frost-dim); font-size: .95rem; }
+.cover .stat { display: flex; align-items: baseline; gap: var(--s3); border-top: 1px solid var(--rule); padding-top: var(--s3); margin-top: var(--s2); }
+.cover .stat b { font: 900 2rem/1 var(--display); color: var(--frost); }
+.cover .stat span { font: .75rem/1.4 var(--mono); color: var(--frost-dim); }
+.cover .later { opacity: .9; }
+.pill { justify-self: start; font: 500 .68rem/1 var(--mono); letter-spacing: .1em; text-transform: uppercase; padding: 5px 8px; border-radius: 3px; border: 1px solid var(--rule); color: var(--frost-dim); }
+.pill.launch { color: var(--sj-orange); border-color: rgba(244,123,42,.45); }
+
+/* ---------- crew ---------- */
+.editor { display: flex; gap: var(--s5); align-items: center; padding: var(--s5); border: 1px solid rgba(244,123,42,.45); border-radius: 8px; background: linear-gradient(90deg, rgba(244,123,42,.10), transparent 70%); flex-wrap: wrap; }
+.editor .seat { font: 900 3rem/1 var(--display); color: var(--sj-orange); }
+.editor div { display: grid; gap: 4px; flex: 1 1 300px; }
+.editor strong { font: 800 1.4rem/1.1 var(--display); text-transform: uppercase; letter-spacing: .03em; }
+.editor p { color: var(--frost-dim); font-size: .95rem; }
+
+.crew { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: var(--s4); }
+.agent { border: 1px solid var(--rule); border-radius: 8px; padding: var(--s5) var(--s4) var(--s4); display: grid; grid-template-rows: auto auto 1fr auto; gap: var(--s3); background: var(--ice-night); transition: border-color .2s, transform .2s; }
+.agent:hover { border-color: var(--sj-blue); transform: translateY(-2px); }
+.agent svg { width: 36px; height: 36px; stroke: var(--sj-blue-soft); fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.agent h3 { font-size: 1.35rem; font-weight: 800; letter-spacing: .03em; }
+.agent p { color: var(--frost-dim); font-size: .92rem; }
+.agent .spec { font: .72rem/1.4 var(--mono); color: var(--frost-dim); border-top: 1px dashed var(--rule); padding-top: var(--s3); }
+.agent .spec b { color: var(--sj-orange); font-weight: 500; }
+
+.flow { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s2) var(--s3); font: .8rem var(--mono); color: var(--frost-dim); padding: var(--s4) var(--s5); border: 1px solid var(--rule); border-radius: 8px; background: var(--boards); }
+.flow span { color: var(--frost); }
+.flow i { font-style: normal; color: var(--sj-orange); }
+
+/* ---------- data ---------- */
+.data { display: grid; grid-template-columns: repeat(4, 1fr); border-block: 1px solid var(--rule); }
+.data div { padding: var(--s5) var(--s4); display: grid; gap: var(--s2); }
+.data div + div { border-left: 1px solid var(--rule); }
+.data b { font: 900 clamp(2rem, 5vw, 3.2rem)/1 var(--display); }
+.data small { font: .75rem/1.4 var(--mono); color: var(--frost-dim); text-transform: uppercase; letter-spacing: .08em; }
+.data-note { font: .78rem/1.5 var(--mono); color: var(--frost-dim); max-width: 80ch; }
+
+/* ---------- lineup ---------- */
+.lineup { list-style: none; margin: 0; padding: 0; display: grid; }
+.lineup li { display: grid; grid-template-columns: 140px 1fr auto; gap: var(--s5); align-items: baseline; padding-block: var(--s4); border-bottom: 1px solid var(--rule); }
+.lineup .when { font: .8rem var(--mono); color: var(--frost-dim); }
+.lineup h3 { font: 600 1.15rem/1.3 var(--body); text-transform: none; }
+.lineup p { color: var(--frost-dim); font-size: .9rem; margin-top: 4px; }
+.lineup li.opener h3 { color: var(--sj-orange); }
+
+/* ---------- footer ---------- */
+.foot { margin-top: var(--s8); padding-block: var(--s6) var(--s7); border-top: 1px solid var(--rule); display: flex; flex-wrap: wrap; gap: var(--s5); align-items: center; justify-content: space-between; font: .78rem/1.6 var(--mono); color: var(--frost-dim); }
+.foot .icon svg { height: 40px; width: auto; display: block; }
+.foot div { display: grid; gap: 2px; }
+
+@media (max-width: 760px) {
+  .data { grid-template-columns: 1fr 1fr; }
+  .data div:nth-child(3) { border-left: 0; }
+  .data div:nth-child(n+3) { border-top: 1px solid var(--rule); }
+  .lineup li { grid-template-columns: 1fr; gap: 4px; }
+  .clock .vs { border-left: 0; padding-left: 0; border-top: 1px solid var(--rule); padding-top: var(--s3); text-align: center; }
+  .hero { padding-block: var(--s7) var(--s6); }
+}
+@media (prefers-reduced-motion: reduce) { .agent { transition: none; } .agent:hover { transform: none; } }
+</style>
+</head>
+<body>
+
+
+<div class="page">
+
+  <header class="top">
+    <a class="icon" href="#top" aria-label="xBay"><svg viewBox="0 0 520 150" role="img" aria-label="xBay"><title>xBay</title><defs>
+  <linearGradient id="lgfill" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#3189EA"/><stop offset="1" stop-color="#0F5FB8"/>
+  </linearGradient>
+  <pattern id="mesh" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+    <path d="M0 0H8M0 0V8" fill="none" stroke="#D5DCE6" stroke-width="1.2" opacity=".6"/>
+  </pattern>
+</defs><g transform="translate(0 82)"><g stroke="#F47B2A" stroke-width="3" stroke-linecap="round" opacity=".8"><line x1="0" y1="10" x2="22" y2="10"/><line x1="6" y1="17" x2="24" y2="17"/><line x1="12" y1="24" x2="26" y2="24"/></g><ellipse cx="46" cy="19" rx="20" ry="9" fill="#05080D" stroke="#F47B2A" stroke-width="2.5"/><ellipse cx="46" cy="15" rx="20" ry="8" fill="#1B232F" stroke="#D5DCE6" stroke-width="1.5"/></g><g transform="translate(52 14) scale(1)"><g fill="#D5DCE6" stroke="#D5DCE6" stroke-width="9" stroke-linejoin="miter"><polygon points="8,6 46,6 132,114 94,114"/><polygon points="94,6 132,6 46,114 8,114"/></g><g fill="url(#lgfill)"><polygon points="8,6 46,6 132,114 94,114"/><polygon points="94,6 132,6 46,114 8,114"/></g><polygon points="8,6 46,6 89,60 51,60" fill="url(#mesh)"/><polygon points="63,60 79,60 36,114 20,114" fill="#F47B2A"/></g><path d="M203.68 42.39999999999999H254.88Q267.424 42.39999999999999 273.312 48.096Q279.2 53.792 279.2 65.44Q279.2 73.12 275.87199999999996 77.92Q272.544 82.72 267.68 84.64Q278.048 87.45599999999999 281.76 98.464Q283.04 102.432 283.04 107.68Q283.04 120.224 277.15200000000004 126.112Q271.264 132.0 258.72 132.0H203.68ZM260.0 103.84Q260.0 96.16 252.32 96.16H226.72V114.08H252.32Q260.0 114.08 260.0 106.4ZM256.16 68.0Q256.16 60.31999999999999 248.48000000000002 60.31999999999999H226.72V78.24000000000001H248.48000000000002Q256.16 78.24000000000001 256.16 70.56ZM310.56 132.0H285.6L319.52 42.39999999999999H345.12L379.03999999999996 132.0H354.08L348.32 116.0H316.32ZM322.08 99.36H342.56L332.32 69.28ZM375.2 42.39999999999999H399.52L420.64 85.92L441.76 42.39999999999999H466.08L432.15999999999997 108.32V132.0H409.12V108.32Z" fill="none" stroke="#D5DCE6" stroke-width="8" stroke-linejoin="miter"/><path d="M203.68 42.39999999999999H254.88Q267.424 42.39999999999999 273.312 48.096Q279.2 53.792 279.2 65.44Q279.2 73.12 275.87199999999996 77.92Q272.544 82.72 267.68 84.64Q278.048 87.45599999999999 281.76 98.464Q283.04 102.432 283.04 107.68Q283.04 120.224 277.15200000000004 126.112Q271.264 132.0 258.72 132.0H203.68ZM260.0 103.84Q260.0 96.16 252.32 96.16H226.72V114.08H252.32Q260.0 114.08 260.0 106.4ZM256.16 68.0Q256.16 60.31999999999999 248.48000000000002 60.31999999999999H226.72V78.24000000000001H248.48000000000002Q256.16 78.24000000000001 256.16 70.56ZM310.56 132.0H285.6L319.52 42.39999999999999H345.12L379.03999999999996 132.0H354.08L348.32 116.0H316.32ZM322.08 99.36H342.56L332.32 69.28ZM375.2 42.39999999999999H399.52L420.64 85.92L441.76 42.39999999999999H466.08L432.15999999999997 108.32V132.0H409.12V108.32Z" fill="url(#lgfill)"/></svg></a>
+    <span class="status"><i></i>Launching before the Dec 5 opener</span>
+  </header>
+
+  <div class="hero" id="top">
+    <div class="mark"><svg viewBox="0 0 520 172" role="img" aria-label="xBay: The Expected Bay Hockey"><title>xBay: The Expected Bay Hockey</title><defs>
+  <linearGradient id="lgfill" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#3189EA"/><stop offset="1" stop-color="#0F5FB8"/>
+  </linearGradient>
+  <pattern id="mesh" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+    <path d="M0 0H8M0 0V8" fill="none" stroke="#D5DCE6" stroke-width="1.2" opacity=".6"/>
+  </pattern>
+</defs><g transform="translate(0 82)"><g stroke="#F47B2A" stroke-width="3" stroke-linecap="round" opacity=".8"><line x1="0" y1="10" x2="22" y2="10"/><line x1="6" y1="17" x2="24" y2="17"/><line x1="12" y1="24" x2="26" y2="24"/></g><ellipse cx="46" cy="19" rx="20" ry="9" fill="#05080D" stroke="#F47B2A" stroke-width="2.5"/><ellipse cx="46" cy="15" rx="20" ry="8" fill="#1B232F" stroke="#D5DCE6" stroke-width="1.5"/></g><g transform="translate(52 14) scale(1)"><g fill="#D5DCE6" stroke="#D5DCE6" stroke-width="9" stroke-linejoin="miter"><polygon points="8,6 46,6 132,114 94,114"/><polygon points="94,6 132,6 46,114 8,114"/></g><g fill="url(#lgfill)"><polygon points="8,6 46,6 132,114 94,114"/><polygon points="94,6 132,6 46,114 8,114"/></g><polygon points="8,6 46,6 89,60 51,60" fill="url(#mesh)"/><polygon points="63,60 79,60 36,114 20,114" fill="#F47B2A"/></g><path d="M203.68 42.39999999999999H254.88Q267.424 42.39999999999999 273.312 48.096Q279.2 53.792 279.2 65.44Q279.2 73.12 275.87199999999996 77.92Q272.544 82.72 267.68 84.64Q278.048 87.45599999999999 281.76 98.464Q283.04 102.432 283.04 107.68Q283.04 120.224 277.15200000000004 126.112Q271.264 132.0 258.72 132.0H203.68ZM260.0 103.84Q260.0 96.16 252.32 96.16H226.72V114.08H252.32Q260.0 114.08 260.0 106.4ZM256.16 68.0Q256.16 60.31999999999999 248.48000000000002 60.31999999999999H226.72V78.24000000000001H248.48000000000002Q256.16 78.24000000000001 256.16 70.56ZM310.56 132.0H285.6L319.52 42.39999999999999H345.12L379.03999999999996 132.0H354.08L348.32 116.0H316.32ZM322.08 99.36H342.56L332.32 69.28ZM375.2 42.39999999999999H399.52L420.64 85.92L441.76 42.39999999999999H466.08L432.15999999999997 108.32V132.0H409.12V108.32Z" fill="none" stroke="#D5DCE6" stroke-width="8" stroke-linejoin="miter"/><path d="M203.68 42.39999999999999H254.88Q267.424 42.39999999999999 273.312 48.096Q279.2 53.792 279.2 65.44Q279.2 73.12 275.87199999999996 77.92Q272.544 82.72 267.68 84.64Q278.048 87.45599999999999 281.76 98.464Q283.04 102.432 283.04 107.68Q283.04 120.224 277.15200000000004 126.112Q271.264 132.0 258.72 132.0H203.68ZM260.0 103.84Q260.0 96.16 252.32 96.16H226.72V114.08H252.32Q260.0 114.08 260.0 106.4ZM256.16 68.0Q256.16 60.31999999999999 248.48000000000002 60.31999999999999H226.72V78.24000000000001H248.48000000000002Q256.16 78.24000000000001 256.16 70.56ZM310.56 132.0H285.6L319.52 42.39999999999999H345.12L379.03999999999996 132.0H354.08L348.32 116.0H316.32ZM322.08 99.36H342.56L332.32 69.28ZM375.2 42.39999999999999H399.52L420.64 85.92L441.76 42.39999999999999H466.08L432.15999999999997 108.32V132.0H409.12V108.32Z" fill="url(#lgfill)"/><path d="M53.00071190996901 166.0V145.41818359375H47.27201172230955V142.0H64.79675513215896V145.41818359375H59.068054944499494V166.0ZM67.11173231188492 166.0V142.0H73.1790753464154V152.1131591796875H78.38410532850374V142.0H84.45144836303422V166.0H78.38410532850374V155.5313427734375H73.1790753464154V166.0ZM88.50593679520914 166.0V142.0H103.35958447950838V145.41818359375H94.57327982973962V152.1131591796875H102.88938218317159V155.5313427734375H94.57327982973962V162.58181640625H103.35958447950838V166.0ZM116.64754423096637 166.0V142.0H131.50119191526562V145.41818359375H122.71488726549686V152.1131591796875H131.03098961892883V155.5313427734375H122.71488726549686V162.58181640625H131.50119191526562V166.0ZM133.2305208084165 166.0 138.6935536374328 153.58127685546876 133.38674598055633 142.0H139.32819280942456L141.58621612376413 147.622900390625L142.36428842462868 152.029609375H143.299638189556L144.07771049042054 147.622900390625L146.25685782873154 142.0H152.19830465759978L147.128124928809 153.708701171875L152.35452982973962 166.0H146.41308300087138L144.09287497365932 160.0835498046875L143.299638189556 155.44779296875H142.36428842462868L141.57105164052533 160.0835498046875L139.17196763728472 166.0ZM155.0630718416826 166.0V142.0H163.298874755103Q168.0444932162099 142.0 170.15880980577674 143.24300903320312Q172.27312639534355 144.48601806640625 172.4275875435689 147.35656005859374Q172.50822754351194 148.80361572265625 172.50822754351194 150.01100708007812Q172.50822754351194 151.2183984375 172.4275875435689 152.5816015625Q172.27312639534355 155.44036865234375 170.1562823919036 156.68926513671875Q168.03943838846365 157.93816162109374 163.28876509961046 157.93816162109374H161.1304148762131V166.0ZM161.1304148762131 154.51997802734374H163.28876509961046Q164.80023129954895 154.51997802734374 165.54497273206843 154.07369018554687Q166.2897141645879 153.62740234375 166.3602445090384 152.782900390625Q166.43077485348894 151.93502197265624 166.45428496830579 150.9512451171875Q166.47779508312263 149.96746826171875 166.45428496830579 148.9853039550781Q166.43077485348894 148.0031396484375 166.3602445090384 147.15526123046874Q166.2897141645879 146.298984375 165.54750014594157 145.858583984375Q164.8052861272952 145.41818359375 163.298874755103 145.41818359375H161.1304148762131ZM175.58740207678375 166.0V142.0H190.441049761083V145.41818359375H181.65474511131424V152.1131591796875H189.9708474647462V155.5313427734375H181.65474511131424V162.58181640625H190.441049761083V166.0ZM202.3067355759921 166.2806494140625Q197.5140968852515 166.2806494140625 195.48118368558636 165.00497802734375Q193.44827048592126 163.729306640625 193.34588439507584 160.773115234375Q193.31226462476647 159.30880859375 193.28875450994963 157.56899291992187Q193.26524439513278 155.82917724609376 193.26524439513278 153.99733764648437Q193.26524439513278 152.165498046875 193.28875450994963 150.41818237304688Q193.31226462476647 148.67086669921875 193.34588439507584 147.18623535156252Q193.4113599117801 144.63796630859375 195.52062167360066 143.18349609375Q197.6298834354212 141.72902587890624 202.29662592049957 141.72902587890624Q206.90471174053442 141.72902587890624 208.97541752629792 142.997197265625Q211.04612331206144 144.26536865234374 211.17707434546995 147.20978515625Q211.2005844602868 147.7241357421875 211.2005844602868 148.37420043945315Q211.2005844602868 149.02426513671875 211.1796017593431 149.67271728515624Q211.15861905839938 150.32116943359375 211.13510894358254 150.83552001953126H205.06776590905204Q205.0912760238689 150.22569335937501 205.1122587248126 149.4488427734375Q205.1332414257563 148.6719921875 205.1332414257563 147.89191650390626Q205.1332414257563 147.1118408203125 205.10973131093948 146.5052392578125Q205.08622119612264 145.70138671875 204.36916269420902 145.29848632812502Q203.6521041922954 144.89558593750002 202.29662592049957 144.89558593750002Q200.91105592622333 144.89558593750002 200.18565179273168 145.29848632812502Q199.46024765924 145.70138671875 199.4132274296063 146.5052392578125Q199.3242417980852 148.24471923828125 199.28897662585996 150.14728393554688Q199.2537114536347 152.0498486328125 199.2537114536347 154.00161254882812Q199.2537114536347 155.95337646484376 199.28897662585996 157.85166625976564Q199.3242417980852 159.7499560546875 199.4132274296063 161.4776611328125Q199.46024765924 162.2900634765625 200.1881792066048 162.70207641601564Q200.91611075396958 163.11408935546876 202.3067355759921 163.11408935546876Q203.7696547663796 163.11408935546876 204.52197844051847 162.70207641601564Q205.27430211465736 162.2900634765625 205.29781222947418 161.4776611328125Q205.32132234429102 160.866708984375 205.33054998782632 160.07373291015625Q205.3397776313616 159.2807568359375 205.32549516008004 158.48778076171874Q205.3112126887985 157.6948046875 205.28770257398165 157.08707763671876H211.35504560851214Q211.40712066589208 157.9457568359375 211.40964807976522 158.9300964355469Q211.41217549363836 159.91443603515626 211.36515526400467 160.773115234375Q211.23420423059616 163.729306640625 209.13076068648053 165.00497802734375Q207.0273171423649 166.2806494140625 202.3067355759921 166.2806494140625ZM218.88808205759068 166.0V145.41818359375H213.1593818699312V142.0H230.68412527978063V145.41818359375H224.95542509212115V166.0ZM232.99910245950653 166.0V142.0H247.8527501438058V145.41818359375H239.06644549403703V152.1131591796875H247.382547847469V155.5313427734375H239.06644549403703V162.58181640625H247.8527501438058V166.0ZM250.93732006475528 166.0V142.0H259.59783182479606Q264.37707005621235 142.0 266.5098419328498 143.30672119140627Q268.64261380948716 144.6134423828125 268.726544613262 147.60818359375Q268.7970749577125 149.886689453125 268.8205850725293 151.9374572753906Q268.84409518734617 153.98822509765625 268.8205850725293 156.03738037109375Q268.7970749577125 158.08653564453124 268.726544613262 160.36504150390624Q268.64261380948716 163.37478271484375 266.5073145189766 164.68739135742186Q264.3720152284661 166.0 259.58772216930356 166.0ZM257.0046630992858 162.58181640625H259.58772216930356Q261.1042431969883 162.58181640625 261.86996733045146 162.133916015625Q262.63569146391467 161.686015625 262.6592015787315 160.8179638671875Q262.72467709543577 159.10008544921874 262.75741485378785 157.39559448242187Q262.79015261214 155.691103515625 262.79015261214 153.98661254882813Q262.79015261214 152.28212158203124 262.75741485378785 150.5717431640625Q262.72467709543577 148.86136474609376 262.6592015787315 147.15526123046874Q262.63569146391467 146.298984375 261.86996733045146 145.858583984375Q261.1042431969883 145.41818359375 259.59783182479606 145.41818359375H257.0046630992858ZM282.8170357563901 166.0V142.0H290.7373347656962Q295.48800805454937 142.0 297.6719729766095 143.24300903320312Q299.8559378986696 144.48601806640625 299.8660475541621 147.35656005859374Q299.87615720965465 148.04746826171876 299.87615720965465 148.62129882812502Q299.87615720965465 149.19512939453125 299.82913698002096 149.749609375Q299.68478548728814 151.2878564453125 298.7782379089211 152.1908544921875Q297.87169033055403 153.0938525390625 295.95115425522823 153.5116015625V154.18967529296876Q297.93716584725826 154.60419921875 298.864696126569 155.52058471679686Q299.7922264058798 156.43697021484374 299.87615720965465 158.02231689453126Q299.9231774392883 158.72372314453125 299.9231774392883 159.321103515625Q299.9231774392883 159.91848388671875 299.87615720965465 160.64343994140626Q299.6898403150344 163.49898193359374 297.591451598665 164.74949096679688Q295.49306288229565 166.0 290.74238959344245 166.0ZM288.88437879092055 162.58181640625H290.74238959344245Q292.2437461378884 162.58181640625 293.02122532876 162.07770385742188Q293.7987045196316 161.57359130859376 293.80881417512416 160.593115234375Q293.82397865836293 159.96880859375 293.82397865836293 159.39497802734377Q293.82397865836293 158.8211474609375 293.80881417512416 158.20006591796874Q293.7987045196316 156.7505419921875 293.06900894835235 156.1409423828125Q292.33931337707304 155.5313427734375 290.69689614372606 155.5313427734375H288.88437879092055ZM288.88437879092055 152.1131591796875H290.7272251102037Q292.23363648239587 152.1131591796875 293.01111567326745 151.47839721679688Q293.7885948641391 150.84363525390626 293.7987045196316 149.6489599609375Q293.81892383061665 149.001103515625 293.81892383061665 148.3946105957031Q293.81892383061665 147.78811767578125 293.7987045196316 147.15526123046874Q293.7885948641391 146.298984375 293.01111567326745 145.858583984375Q292.23363648239587 145.41818359375 290.7373347656962 145.41818359375H288.88437879092055ZM302.1322404803399 166.0 307.04819630490243 142.0H316.82566045667596L321.7416162812386 166.0H315.51652129465094L314.67168394116203 160.49978515625H309.20217282041637L308.35733546692745 166.0ZM309.76946913585516 157.0816015625H314.10438762572323L313.28329763104836 151.78772705078126L312.5977390095338 145.41818359375H311.28117257979085L310.5956139582763 151.7909521484375ZM329.42253227087883 166.0V160.1516455078125V160.1216455078125L322.85476128946823 142.0H329.04800052966095L331.0193221264465 148.0586572265625L331.8661607478471 155.063505859375H333.0614113116798L333.89814027758786 148.0586572265625L335.8694618743734 142.0H342.0728107700587L335.49493013315555 160.128095703125V160.158095703125V166.0ZM354.80500732555356 166.0V142.0H360.872350360084V152.1131591796875H366.0773803421724V142.0H372.14472337670287V166.0H366.0773803421724V155.5313427734375H360.872350360084V166.0ZM385.02911195638546 166.27742431640624Q380.33204050482954 166.27742431640624 378.2387066162064 165.00497802734372Q376.1453727275833 163.73253173828124 376.0429866367379 160.78279052734376Q375.99091157935794 159.1418603515625 375.96487405066796 157.43414428710938Q375.93883652197803 155.72642822265624 375.93883652197803 153.98983764648438Q375.93883652197803 152.2532470703125 375.96487405066796 150.54553100585937Q375.99091157935794 148.83781494140624 376.0429866367379 147.196884765625Q376.1453727275833 144.25569335937502 378.2387066162064 142.9891345214844Q380.33204050482954 141.72257568359376 385.02911195638546 141.72257568359376Q389.744638695012 141.72257568359376 391.7943617798318 142.9891345214844Q393.8440848646516 144.25569335937502 393.9783267018919 147.196884765625Q394.0622575056667 148.86136474609376 394.1067503214273 150.570693359375Q394.1512431371878 152.28002197265624 394.1512431371878 154.0091125488281Q394.1512431371878 155.738203125 394.1067503214273 157.44003173828128Q394.0622575056667 159.1418603515625 393.9783267018919 160.78279052734376Q393.8440848646516 163.73253173828124 391.7943617798318 165.00497802734372Q389.744638695012 166.27742431640624 385.02911195638546 166.27742431640624ZM385.02911195638546 163.10763916015625Q386.47686666353417 163.10763916015625 387.1821701080394 162.70207641601564Q387.8874735525446 162.296513671875 387.9109836673614 161.48733642578125Q388.02347941369936 159.78640625 388.0679722294599 157.8725537109375Q388.11246504522046 155.958701171875 388.11246504522046 153.972099609375Q388.11246504522046 151.985498046875 388.0654448155868 150.07970825195312Q388.0184245859531 148.17391845703125 387.9109836673614 146.4923388671875Q387.8874735525446 145.69171142578125 387.16371482096883 145.29042358398436Q386.43995608939304 144.8891357421875 385.02911195638546 144.8891357421875Q383.62332265112417 144.8891357421875 382.8903362760131 145.29042358398436Q382.15734990090203 145.69171142578125 382.1103296712684 146.4923388671875Q382.016289212001 148.17391845703125 381.96004133883207 150.07970825195312Q381.90379346566306 151.985498046875 381.9063208795362 153.972099609375Q381.90884829340933 155.958701171875 381.9650961665783 157.8725537109375Q382.0213440397473 159.78640625 382.1103296712684 161.48733642578125Q382.15734990090203 162.296513671875 382.8903362760131 162.70207641601564Q383.62332265112417 163.10763916015625 385.02911195638546 163.10763916015625ZM406.70367379359726 166.2806494140625Q401.91103510285666 166.2806494140625 399.8781219031915 165.00497802734375Q397.8452087035264 163.729306640625 397.742822612681 160.773115234375Q397.7092028423716 159.30880859375 397.6856927275548 157.56899291992187Q397.662182612738 155.82917724609376 397.662182612738 153.99733764648437Q397.662182612738 152.165498046875 397.6856927275548 150.41818237304688Q397.7092028423716 148.67086669921875 397.742822612681 147.18623535156252Q397.80829812938526 144.63796630859375 399.9175598912058 143.18349609375Q402.0268216530264 141.72902587890624 406.69356413810476 141.72902587890624Q411.3016499581396 141.72902587890624 413.3723557439031 142.997197265625Q415.4430615296666 144.26536865234374 415.57401256307514 147.20978515625Q415.59752267789196 147.7241357421875 415.59752267789196 148.37420043945315Q415.59752267789196 149.02426513671875 415.57653997694825 149.67271728515624Q415.55555727600455 150.32116943359375 415.5320471611877 150.83552001953126H409.46470412665724Q409.48821424147405 150.22569335937501 409.50919694241776 149.4488427734375Q409.53017964336146 148.6719921875 409.53017964336146 147.89191650390626Q409.53017964336146 147.1118408203125 409.50666952854465 146.5052392578125Q409.4831594137278 145.70138671875 408.7661009118142 145.29848632812502Q408.04904240990055 144.89558593750002 406.69356413810476 144.89558593750002Q405.30799414382847 144.89558593750002 404.58259001033684 145.29848632812502Q403.85718587684516 145.70138671875 403.8101656472115 146.5052392578125Q403.7211800156904 148.24471923828125 403.6859148434651 150.14728393554688Q403.6506496712399 152.0498486328125 403.6506496712399 154.00161254882812Q403.6506496712399 155.95337646484376 403.6859148434651 157.85166625976564Q403.7211800156904 159.7499560546875 403.8101656472115 161.4776611328125Q403.85718587684516 162.2900634765625 404.58511742420995 162.70207641601564Q405.31304897157474 163.11408935546876 406.70367379359726 163.11408935546876Q408.16659298398474 163.11408935546876 408.91891665812363 162.70207641601564Q409.6712403322625 162.2900634765625 409.69475044707934 161.4776611328125Q409.7182605618962 160.866708984375 409.7274882054315 160.07373291015625Q409.73671584896675 159.2807568359375 409.7224333776852 158.48778076171874Q409.70815090640366 157.6948046875 409.68464079158684 157.08707763671876H415.7519838261173Q415.80405888349725 157.9457568359375 415.80658629737036 158.9300964355469Q415.8091137112435 159.91443603515626 415.76209348160984 160.773115234375Q415.63114244820133 163.729306640625 413.5276989040857 165.00497802734375Q411.42425535997006 166.2806494140625 406.70367379359726 166.2806494140625ZM419.31676238296194 166.0V142.0H425.77848529763526L425.69960932160666 147.78452392578126L424.63731105909415 153.3448046875H425.78554139329316L428.2244862145753 147.64906982421874L431.4178592938422 142.0H438.0524986438114L431.96561741815873 152.08608154296874L438.41044243780743 166.0H432.24400411626334L427.9409413727902 156.4178369140625L425.5049467954084 159.92205810546875V166.0ZM440.875537670004 166.0V142.0H455.72918535430324V145.41818359375H446.94288070453445V152.1131591796875H455.2589830579664V155.5313427734375H446.94288070453445V162.58181640625H455.72918535430324V166.0ZM463.85336879356885 166.0V160.1516455078125V160.1216455078125L457.28559781215824 142.0H463.47883705235097L465.45015864913654 148.0586572265625L466.29699727053713 155.063505859375H467.49224783436983L468.32897680027787 148.0586572265625L470.30029839706344 142.0H476.5036472927487L469.92576665584556 160.128095703125V160.158095703125V166.0Z" fill="#D5DCE6"/></svg></div>
+    <h1>Advanced analytics for <em>PWHL San Jose</em></h1>
+    <p class="lede">Expected goals, goaltending beyond save percentage, and a data-driven preview and recap for every San Jose game. Women's hockey deserves the same analysis the NHL gets, so we're building it for the Bay.</p>
+    <div class="clock" aria-live="polite">
+      <div class="cd"><b class="num" id="cd-days">43</b><small>days</small></div>
+      <div class="cd"><b class="num" id="cd-hours">00</b><small>hours</small></div>
+      <div class="vs"><strong>Minnesota at San Jose</strong><span>Home opener · Sat, Dec 5 · SAP Center</span></div>
+    </div>
+  </div>
+
+  <!-- ============ COVERAGE ============ -->
+  <section aria-labelledby="cover-h">
+    <div class="sec-head">
+      <span class="eyebrow">What's coming</span>
+      <h2 id="cover-h">What you'll find here</h2>
+      <p>All the numbers come from the PWHL's play-by-play data.</p>
+    </div>
+    <div class="cover">
+      <article>
+        <span class="pill launch">At launch</span>
+        <h3>Expected goals</h3>
+        <p>How likely each shot was to go in, based on where it came from and the game situation. Most of the charts here start with it.</p>
+        <div class="stat"><b class="num">24,813</b><span>PWHL shots rated,<br>back to game one</span></div>
+      </article>
+      <article>
+        <span class="pill launch">At launch</span>
+        <h3>Goaltending</h3>
+        <p>Save percentage ignores how hard the shots were. Goals saved above expected doesn't. A lot of the goalie work here borrows from Steve Valiquette and Clear Sight Analytics.</p>
+        <div class="stat"><b class="num">+24.9</b><span>Ann-Renée Desbiens, 2025-26<br>incl. playoffs</span></div>
+      </article>
+      <article>
+        <span class="pill launch">At launch</span>
+        <h3>The San Jose roster</h3>
+        <p>San Jose has no history yet, but most of its players do. Everyone in camp gets a profile.</p>
+        <div class="stat"><b class="num">15 of 29</b><span>in camp have never<br>played a PWHL game</span></div>
+      </article>
+      <article>
+        <span class="pill launch">At launch</span>
+        <h3>Previews &amp; recaps</h3>
+        <p>Every SJ game. Matchups and goalies before, shot maps and the chances that mattered after.</p>
+        <div class="stat"><b class="num">Dec 5</b><span>vs. Minnesota,<br>the 2025 champs</span></div>
+      </article>
+      <article>
+        <span class="pill">In season</span>
+        <h3>Predictions</h3>
+        <p>Win probabilities, once a model can beat just picking the home team. None can yet.</p>
+        <div class="stat"><b class="num">55.9%</b><span>home teams' win rate<br>in 320 PWHL games</span></div>
+      </article>
+      <article class="later">
+        <span class="pill">Later this season</span>
+        <h3>Video breakdowns</h3>
+        <p>The stats feed doesn't track passes or screens, which is what usually beats goalies. I'll tag those from game video.</p>
+        <div class="stat"><b class="num">0</b><span>shots tagged<br>so far</span></div>
+      </article>
+    </div>
+  </section>
+
+  <!-- ============ CREW ============ -->
+  <section aria-labelledby="crew-h">
+    <div class="sec-head">
+      <span class="eyebrow">Who's behind it</span>
+      <h2 id="crew-h">One fan and a few AI agents</h2>
+      <p>I'm a PWHL San Jose season ticket holder. The data work runs through eight Claude Code agents on top of a Python pipeline: DuckDB for the stats warehouse, Neo4j for the player graph, PyTorch for the models. I pick the topics and edit everything before it goes up.</p>
+    </div>
+
+
+    <div class="crew">
+      <article class="agent">
+        <svg viewBox="0 0 36 36" aria-hidden="true"><ellipse cx="18" cy="8" rx="11" ry="4"/><path d="M7 8v20c0 2.2 4.9 4 11 4s11-1.8 11-4V8"/><path d="M7 18c0 2.2 4.9 4 11 4s11-1.8 11-4"/></svg>
+        <h3>Data Engineer</h3>
+        <p>Pulls play-by-play, box scores, and rosters from the league's HockeyTech feed. Derives strength state from the penalty clock and goalie pulls, then reconciles shot totals against the official game sheets.</p>
+        <div class="spec">HockeyTech API · Parquet · DuckDB<br>Shots match game sheets within 0.2%</div>
+      </article>
+      <article class="agent">
+        <svg viewBox="0 0 36 36" aria-hidden="true"><path d="M4 32V12a8 8 0 0 1 8-8h12a8 8 0 0 1 8 8v20z"/><path d="M4 26h28"/><circle cx="12" cy="16" r="1.6"/><circle cx="21" cy="12" r="1.6"/><circle cx="24" cy="19" r="2.6"/><circle cx="15" cy="21" r="1.6"/></svg>
+        <h3>Hockey Analyst</h3>
+        <p>Runs the expected-goals model: logistic regression on shot distance, angle, rebounds, and strength state, cross-validated by game. Builds shot maps, special-teams splits, and on-ice goal shares.</p>
+        <div class="spec">AUC 0.71 on held-out games</div>
+      </article>
+      <article class="agent">
+        <svg viewBox="0 0 36 36" aria-hidden="true"><path d="M8 28V12h20v16"/><path d="M8 12l4 5h12l4-5"/><path d="M12 17v11M18 17v11M24 17v11"/><path d="M6 28h24"/></svg>
+        <h3>Goalie Analyst</h3>
+        <p>Goals saved above expected (xGA minus GA), per 60 and by danger tier. Rebound rate, quality starts, and bootstrapped intervals, because goalie samples are small.</p>
+        <div class="spec">GSAx · HD/MD/LD SV% · QS%</div>
+      </article>
+      <article class="agent">
+        <svg viewBox="0 0 36 36" aria-hidden="true"><circle cx="8" cy="9" r="3"/><circle cx="28" cy="9" r="3"/><circle cx="18" cy="18" r="3.5"/><circle cx="8" cy="28" r="3"/><circle cx="28" cy="28" r="3"/><path d="M10.5 10.8l5 4.6M25.5 10.8l-5 4.6M10.5 26.2l5-4.6M25.5 26.2l-5-4.6M11 9h14"/></svg>
+        <h3>Model Builder</h3>
+        <p>A graph neural network over players, lines, and matchups that predicts games from the actual lineup. Walk-forward tested by season, and it has to beat Elo and the home-team rate before it gets published.</p>
+        <div class="spec">PyTorch Geometric · 8 node, 19 edge types</div>
+      </article>
+      <article class="agent">
+        <svg viewBox="0 0 36 36" aria-hidden="true"><rect x="4" y="7" width="28" height="24" rx="3"/><path d="M4 14h28M11 4v6M25 4v6"/><path d="M11 21h5M20 21h5M11 26h5"/></svg>
+        <h3>Game Reporter</h3>
+        <p>Builds the brief for every SJ game: rolling xG share, special teams, goalie matchup, win probability. Until SJ has its own games, the team is projected from its players' prior PWHL careers.</p>
+        <div class="spec">Roster-based projection → actual results</div>
+      </article>
+      <article class="agent">
+        <svg viewBox="0 0 36 36" aria-hidden="true"><path d="M24 5l7 7-17 17H7v-7z"/><path d="M20 9l7 7"/><path d="M5 32h26"/></svg>
+        <h3>Writer</h3>
+        <p>Drafts posts in Quarto with the charts rendered straight from the Python analysis. Every number in a draft traces back to a warehouse query. I edit everything it writes.</p>
+        <div class="spec">Quarto · matplotlib / plotly</div>
+      </article>
+      <article class="agent">
+        <svg viewBox="0 0 36 36" aria-hidden="true"><circle cx="18" cy="18" r="13"/><path d="M11.5 18.5l4.5 4.5 9-10"/></svg>
+        <h3>Fact-Checker</h3>
+        <p>Re-derives every number in a draft independently from the raw data and official game sheets, and checks player names against league rosters. Any mismatch blocks the post.</p>
+        <div class="spec">Independent re-query · roster name check</div>
+      </article>
+      <article class="agent">
+        <svg viewBox="0 0 36 36" aria-hidden="true"><rect x="4" y="8" width="28" height="20" rx="3"/><path d="M15 13.5v9l7.5-4.5z"/><path d="M4 32h28"/></svg>
+        <h3>Video Analyst</h3>
+        <p>Clear Sight-style tagging from game video: pre-shot movement across the Royal Road, screens, deflections. Tags join to feed shots and feed a second-generation xG model. Later this season.</p>
+        <div class="spec">Tags keyed to (game_id, event_idx)</div>
+      </article>
+    </div>
+
+    <div class="flow" aria-label="How a post gets made">
+      <span>HockeyTech feed</span><i>→</i><span>Raw cache</span><i>→</i><span>DuckDB warehouse</span><i>→</i><span>xG + player graph</span><i>→</i><span>Agent draft</span><i>→</i><span>Fact-check</span><i>→</i><span>Me</span><i>→</i><span>xbay.blog</span>
+    </div>
+  </section>
+
+  <!-- ============ DATA ============ -->
+  <section aria-labelledby="data-h">
+    <div class="sec-head">
+      <span class="eyebrow">Under the hood</span>
+      <h2 id="data-h">Built on every PWHL game</h2>
+    </div>
+    <div class="data">
+      <div><b class="num">320</b><small>games</small></div>
+      <div><b class="num">24,813</b><small>shots</small></div>
+      <div><b class="num">413</b><small>players</small></div>
+      <div><b class="num">1,405</b><small>goals</small></div>
+    </div>
+    <p class="data-note">Every regular-season and playoff game from January 2024 through the 2026 Final.</p>
+  </section>
+
+  <!-- ============ LINEUP ============ -->
+  <section aria-labelledby="line-h">
+    <div class="sec-head">
+      <span class="eyebrow">First posts</span>
+      <h2 id="line-h">Before the opener</h2>
+    </div>
+    <ol class="lineup">
+      <li><span class="when">Early November</span><div><h3>What expected goals is (and why save % misleads)</h3><p>The idea behind most of the charts here.</p></div><span class="pill">Methods</span></li>
+      <li><span class="when">Mid November</span><div><h3>Meet the roster</h3><p>All 29 players in camp.</p></div><span class="pill">Roster</span></li>
+      <li><span class="when">Mid November</span><div><h3>The goalie question</h3><p>San Jose's goalies vs. the best in the league.</p></div><span class="pill">Goalies</span></li>
+      <li><span class="when">Late November</span><div><h3>How the four expansion teams were built</h3><p>San Jose, Detroit, Hamilton, and Las Vegas.</p></div><span class="pill">Expansion</span></li>
+      <li class="opener"><span class="when">Dec 3</span><div><h3>Preview: Minnesota at San Jose</h3><p>First game in team history.</p></div><span class="pill launch">Preview</span></li>
+    </ol>
+  </section>
+
+  <footer class="foot">
+    <span class="icon"><svg viewBox="0 0 152 132" role="img" aria-label="xBay"><title>xBay</title><defs>
+  <linearGradient id="lgfill" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#3189EA"/><stop offset="1" stop-color="#0F5FB8"/>
+  </linearGradient>
+  <pattern id="mesh" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+    <path d="M0 0H8M0 0V8" fill="none" stroke="#D5DCE6" stroke-width="1.2" opacity=".6"/>
+  </pattern>
+</defs><g transform="translate(6 6) scale(1)"><g fill="#D5DCE6" stroke="#D5DCE6" stroke-width="9" stroke-linejoin="miter"><polygon points="8,6 46,6 132,114 94,114"/><polygon points="94,6 132,6 46,114 8,114"/></g><g fill="url(#lgfill)"><polygon points="8,6 46,6 132,114 94,114"/><polygon points="94,6 132,6 46,114 8,114"/></g><polyline points="14,108 56,56 78,78 122,26" fill="none" stroke="#0A111D" stroke-width="15" stroke-linejoin="miter" stroke-miterlimit="5"/><polyline points="14,108 56,56 78,78 122,26" fill="none" stroke="#F47B2A" stroke-width="9" stroke-linejoin="miter" stroke-miterlimit="5"/></g></svg></span>
+    <div>
+      <span>Questions or corrections: hello@xbay.blog</span>
+      <span>Independent fan site. Not affiliated with the PWHL or PWHL San Jose.</span>
+      <span>Data: PWHL / HockeyTech.</span>
+    </div>
+  </footer>
+</div>
+
+<script>
+(function () {
+  const opener = new Date("2026-12-05T19:00:00-08:00");
+  const d = document.getElementById("cd-days"), h = document.getElementById("cd-hours");
+  function tick() {
+    const ms = Math.max(0, opener - new Date());
+    d.textContent = Math.floor(ms / 864e5);
+    h.textContent = String(Math.floor(ms / 36e5) % 24).padStart(2, "0");
+  }
+  tick(); setInterval(tick, 60000);
+})();
+</script>
+
+</body>
+</html>
